@@ -4,9 +4,11 @@
 
 function myFunction(){
 
+    /* LEAVE TIMEOUT AT 2000 as it times OUT anything before that */
+
 let options = {
     enableHighAccuracy: true,
-    timeout: 5000,
+    timeout: 2000,
     maximumAge: 0
 };
 
