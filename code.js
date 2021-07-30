@@ -1,5 +1,3 @@
-
-
 let fallBackLocation = {
     latitude: 48.8575,
     longitude: 2.2982
@@ -9,19 +7,20 @@ let photosArray = []
 let currentPhotoIndex = 0
 
 function assembleImageSorceURL(photoObj) {
-    return `https://farm${photoObj.farm}.staticflicker.com` +
+    return `https://farm${photoObj.farm}.staticflickr.com/` +
         `${photoObj.server}/` +
-        `${photoObj.secret}.jpg`;
+        `${photoObj.id}_${photoObj.secret}.jpg`;
 };
 
 
 function showPhotos(data) {
     console.log(data)
     photosArray = data.photos.photo
+    let imageUrl = assembleImageSorceURL(photosArray[0]);
+    console.log(imageUrl)
 
 }
 //Look at the first photo and turn it into an <img src = ____> tag
-console.log(assembleImageSorceURL)
 //append the image tag to the page
 
 
@@ -75,8 +74,6 @@ function success(pos) {
     console.log(`Longitude: ${crd.longitude}`);
     console.log(`More or less ${crd.accuracy} meters.`);
     requestPhotos(pos.coords)
-
-
 }
 
 /* the following function throws an error message if not able to get the geolocation */
@@ -87,46 +84,19 @@ function error(err) {
 
 }
 
-
 navigator.geolocation.getCurrentPosition(success, error, options);
 
+//** STEP FIVE */
+// Step Five - Display the first image
+
+// Append an image element onto the <main> element on the page, using the above URL as the src attribute. The browser will then fetch and display the photo.
 
 
+function constructImageURL (photoObj) { 
+console.log (photoObj)
 
+document.body.append(photoObj)
 
+    
+}
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-Development Plan:
-----------------------------------
-A. Get location that we want to see photos of
-  1. use Geolocation API to get coordinates (lat and lon) or use a fallback location
-    - [ this is a link to the documentation ]
-B. Get photo info from Flickr
-  1. use fetch() to send a GET request to flickr.com/services/rest
-    - Include the lat and lon
-    - Include a search term
-  2. Process the promises to get the photo data
-    - Convert JSON to a usable object ("rehydrate")
-    - Send the photo data to a display function
-C. Display photos
-  1. Create the image URLs from the photo data (function)
-    - https://www.flickr.com/services/api/misc.urls.html
-  2. Insert an <img> tag into the page
-    - crate an img element
-    - set src attribute to image URL
-    - append the element to the right place in the document
-  3. Display link to the image's Flickr page (function)
-    - (Same stuff as the img tag)
-D. Provide a way to advance through photos
-*/
