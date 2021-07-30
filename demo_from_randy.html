@@ -1,0 +1,100 @@
+const fallbackLocation = { latitude: 48.8575, longitude: 2.2982 } // Paris
+let photosArray = []
+let currentPhotoIndex = 0
+
+function assembleImageSourceURL (photoObj) {
+    return `https://farm${photoObj.farm}.staticflickr.com/` +
+        `${photoObj.server}/` +
+        `${photoObj.id}_${photoObj.secret}.jpg`;
+};
+
+function showPhotos (data) {
+	console.log(data)
+	photosArray = data.photos.photo
+
+	// Look at the first photo and turn it into an <img src=___> tag
+	console.log(assembleImageSourceURL(photosArray[currentPhotoIndex]))
+	// Append the image tag to the page
+}
+
+function processResponse (response) {
+	let responsePromise = response.json()
+	responsePromise.then(showPhotos)
+}
+
+function requestPhotos (location) {
+	console.log("Requesting photos near " + location.latitude + ", " + location.longitude)
+
+	let myApiKey = "97000000000000000000000000000543"
+	let url = 'https://shrouded-mountain-15003.herokuapp.com/https://api.flickr.com/services/rest/?api_key=' + myApiKey + '&format=json&nojsoncallback=1&method=flickr.photos.search&safe_search=1&per_page=5&lat='+location.latitude +'&lon='+ location.longitude +'&text=car'
+
+	let fetchPromise = fetch(url)
+	fetchPromise.then(processResponse)
+}
+
+function useCurrentLocation (pos) {
+	console.log("Using actual location")
+	console.log(pos)
+	requestPhotos(pos.coords)
+}
+
+function useFallbackLocation () {
+	console.log("Using fallback location")
+	requestPhotos(fallbackLocation)
+}
+
+let options = {
+	enableHighAccuracy: true,
+	maximumAge: 0
+}
+
+navigator.geolocation.getCurrentPosition(useCurrentLocation, useFallbackLocation, options)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/*
+Development Plan:
+----------------------------------
+A. Get location that we want to see photos of
+  1. use Geolocation API to get coordinates (lat and lon) or use a fallback location
+	- [ this is a link to the documentation ]
+B. Get photo info from Flickr
+  1. use fetch() to send a GET request to flickr.com/services/rest
+	- Include the lat and lon
+	- Include a search term
+  2. Process the promises to get the photo data
+	- Convert JSON to a usable object ("rehydrate")
+	- Send the photo data to a display function
+C. Display photos
+  1. Create the image URLs from the photo data (function)
+	- https://www.flickr.com/services/api/misc.urls.html
+  2. Insert an <img> tag into the page
+	- crate an img element
+	- set src attribute to image URL
+	- append the element to the right place in the document
+  3. Display link to the image's Flickr page (function)
+	- (Same stuff as the img tag)
+D. Provide a way to advance through photos
+*/
