@@ -1,37 +1,70 @@
-// Get the geographic location from the browser
 
-/* the code below declares options with a timeout of 5 seconds(5000) and maximum age of 0 meaning its non-existant */
 
-function assembleImageSource(photosOb) {
-    return 'https://farm${photoObj.farm}.staticflicker/' + 
-    `${photoObj.server}/` +
-    `${photoObj.id}_${photoObj.secret}.jpg`    
-}
+let fallBackLocation = {
+    latitude: 48.8575,
+    longitude: 2.2982
+} // Paris
 
-function showPhotos (data) {
+let photosArray = []
+let currentPhotoIndex = 0
+
+function assembleImageSorceURL(photoObj) {
+    return `https://farm${photoObj.farm}.staticflicker.com` +
+        `${photoObj.server}/` +
+        `${photoObj.secret}.jpg`;
+};
+
+
+function showPhotos(data) {
     console.log(data)
-    photosArray - data.photos.photo
+    photosArray = data.photos.photo
 
-    //look at the first photo and turn it into an <img src=___> tag
-    console.log(assembleImageSource(photosArray[0]))
 }
+//Look at the first photo and turn it into an <img src = ____> tag
+console.log(assembleImageSorceURL)
+//append the image tag to the page
+
 
 function processResponse(response) {
     let responsePromise = response.json()
     responsePromise.then(showPhotos)
-    
 }
 
+function requestPhotos(location) {
+    console.log("Requesting photos near " + location.latitude + ", " + location.longitude)
 
-function useCurrentLocation(){
+    //* SETTING UP API KEY *//
 
-    /* LEAVE TIMEOUT AT 2000 as it times OUT anything before that */
+    let myApiKey = "5c18d7cf47a3a9fdf8f4b4347aa206f0"
+    let url = 'https://shrouded-mountain-15003.herokuapp.com/https://api.flickr.com/services/rest/?api_key=' + myApiKey + '&format=json&nojsoncallback=1&method=flickr.photos.search&safe_search=1&per_page=5&lat=' + location.latitude + '&lon=' + location.longitude + '&text=car'
+    let fetchPromise = fetch(url)
+    fetchPromise.then(processResponse)
+}
+
+// Get the geographic location from the browser
+
+function useCurrentLocation(pos) {
+    console.log("Using actual loaction")
+    console.log(pos)
+    requestPhotos(pos.coords)
+
+    //* FALLBACK LOCATION *//
+
+    function useFallbackLocation() {
+        console.log("Using fallback location")
+        requestPhotos(fallBackLocation)
+    }
+
+
+
+}
+
+//* CURRENT LOCATION *//
 
 let options = {
     enableHighAccuracy: true,
     maximumAge: 0
 };
-
 /* the following function gives the current location with latitude and longitude */
 
 function success(pos) {
@@ -42,6 +75,8 @@ function success(pos) {
     console.log(`Longitude: ${crd.longitude}`);
     console.log(`More or less ${crd.accuracy} meters.`);
     requestPhotos(pos.coords)
+
+
 }
 
 /* the following function throws an error message if not able to get the geolocation */
@@ -49,35 +84,49 @@ function success(pos) {
 function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
     requestPhotos(fallBackLocation)
+
 }
+
 
 navigator.geolocation.getCurrentPosition(success, error, options);
-}
-
-// Construct the query URL
 
 
 
 
-// Use fetch to send the request to Flickr
-
-let url = (https://flickr.com/services/rest/?api_key=5c18d7cf47a3a9fdf8f4b4347aa206f0&format=json&nojsoncallback=1&method=flickr.photos.search&safe_search=1&per_page=5&lat=39.76574&lon=-86.1579024&text=dog)
-
-let fetchPromise - fetch(url)
-
-fetchPromise.then(processResponse)
-    )
-
-// Process the response data into an object
 
 
-// Use the values in the response object to construct an image source URL
-
-// photos.search is method we are using
 
 
-/**   Get the geographic location from the browser
- Construct the query URL
- Use fetch to send the request to Flickr
- Process the response data into an object
- Use the values in the response object to construct an image source URL */
+
+
+
+
+
+
+
+
+
+/*
+Development Plan:
+----------------------------------
+A. Get location that we want to see photos of
+  1. use Geolocation API to get coordinates (lat and lon) or use a fallback location
+    - [ this is a link to the documentation ]
+B. Get photo info from Flickr
+  1. use fetch() to send a GET request to flickr.com/services/rest
+    - Include the lat and lon
+    - Include a search term
+  2. Process the promises to get the photo data
+    - Convert JSON to a usable object ("rehydrate")
+    - Send the photo data to a display function
+C. Display photos
+  1. Create the image URLs from the photo data (function)
+    - https://www.flickr.com/services/api/misc.urls.html
+  2. Insert an <img> tag into the page
+    - crate an img element
+    - set src attribute to image URL
+    - append the element to the right place in the document
+  3. Display link to the image's Flickr page (function)
+    - (Same stuff as the img tag)
+D. Provide a way to advance through photos
+*/
