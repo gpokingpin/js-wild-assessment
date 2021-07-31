@@ -21,6 +21,7 @@ let fallBackLocation = {
     longitude: 2.2982
 } // Paris
 
+let contents = photoObject.innerHTML[0];
 let photosArray = []
 let currentPhotoIndex = 0
 

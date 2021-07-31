@@ -8,4 +8,5 @@ body {
 img {
     height: 25vh;
     width: 25vw;
+    margin: 5px;
 }
