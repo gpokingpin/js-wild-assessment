@@ -51,13 +51,32 @@ function requestPhotos(location) {
         let imageUrl = assembleImageSorceURL(photosArray[0]);
         console.log(imageUrl)
         let button = document.createElement("button")
+        button.textContent = 'Next Photo';
+
         button.setAttribute("id", "showPhotos");
         document.body.append(button)
         document.getElementById("showPhotos").onclick = function () { myFunction() };
-
+        let counter = 0
         function myFunction() {
-            document.getElementById("showPhotos").innerHTML = "YOU CLICKED ME!";
-        }
+            // console.log(photosArray[counter])
+            let image = document.createElement("img")
+            image.src = assembleImageSorceURL(photosArray[counter]) 
+            
+            // photosArray = photosArray
+            document.body.append(image)
+            counter ++ 
+            
+            if (counter > 4){
+
+                console.log("Greg    ")
+                counter = 0
+                
+                
+                location.reload();
+            }
+    }
+
+
         /** THIS IS WHERE THE PHOTOS RENDOR TO THE PAGE */
         //     photosArray.forEach(photo => {
         //     let image = document.createElement("img")
