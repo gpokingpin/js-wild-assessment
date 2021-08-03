@@ -45,6 +45,10 @@ function requestPhotos(location) {
 
     /** this is where my photos are showing up */
 
+    let counter = 0
+    let image = document.createElement("img")
+    let currentPhoto = photosArray[counter]
+
     function showPhotos(data) {
         console.log(data)
         photosArray = data.photos.photo
@@ -56,25 +60,27 @@ function requestPhotos(location) {
         button.setAttribute("id", "showPhotos");
         document.body.append(button)
         document.getElementById("showPhotos").onclick = function () { myFunction() };
-        let counter = 0
         function myFunction() {
-            // console.log(photosArray[counter])
-            let image = document.createElement("img")
-            image.src = assembleImageSorceURL(photosArray[counter]) 
-            
-            // photosArray = photosArray
-            document.body.append(image)
-            counter ++ 
-            
-            if (counter > 4){
 
-                console.log("Greg    ")
+            // console.log(photosArray[counter])
+            image.src = assembleImageSorceURL(photosArray[counter])
+
+            // photosArray = photosArray
+
+            document.body.append(image)
+
+
+            counter++
+
+            if (counter > 4) {
+
+                location.reload;
+
                 counter = 0
-                
-                
-                location.reload();
+
+
             }
-    }
+        }
 
 
         /** THIS IS WHERE THE PHOTOS RENDOR TO THE PAGE */
@@ -121,20 +127,30 @@ let options = {
     enableHighAccuracy: true,
     maximumAge: 0
 };
-/* the following function gives the current location with latitude and longitude */
 
 
-// /* the following function throws an error message if not able to get the geolocation */
 
-// function error(err) {
-//     console.warn(`ERROR(${err.code}): ${err.message}`);
-//     requestPhotos(fallBackLocation)
-
-// }
-
-// navigator.geolocation.getCurrentPosition(success, error, options);
-
-//** STEP FIVE */
-// Step Five - Display the first image
-
-// Append an image element onto the <main> element on the page, using the above URL as the src attribute. The browser will then fetch and display the photo.
+/*
+Development Plan:
+----------------------------------
+A. Get location that we want to see photos of
+  1. use Geolocation API to get coordinates (lat and lon) or use a fallback location
+    - [ this is a link to the documentation ]
+B. Get photo info from Flickr
+  1. use fetch() to send a GET request to flickr.com/services/rest
+    - Include the lat and lon
+    - Include a search term
+  2. Process the promises to get the photo data
+    - Convert JSON to a usable object ("rehydrate")
+    - Send the photo data to a display function
+C. Display photos
+  1. Create the image URLs from the photo data (function)
+    - https://www.flickr.com/services/api/misc.urls.html
+  2. Insert an <img> tag into the page
+    - crate an img element
+    - set src attribute to image URL
+    - append the element to the right place in the document
+  3. Display link to the image's Flickr page (function)
+    - (Same stuff as the img tag)
+D. Provide a way to advance through photos
+*/
